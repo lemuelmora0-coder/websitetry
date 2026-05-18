@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday Angel 💙</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-light: #e6f1fb;
+    --blue-mid: #85b7eb;
+    --blue-main: #378add;
+    --blue-deep: #185fa5;
+    --blue-dark: #0c447c;
+    --white: #ffffff;
+    --soft: #f0f7ff;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #c9e4fa 0%, #e8f4fd 40%, #d4eaff 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  /* floating hearts bg */
+  .hearts-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .heart-float {
+    position: absolute;
+    bottom: -60px;
+    font-size: 22px;
+    animation: floatUp linear infinite;
+    opacity: 0.18;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0.18; }
+    80%  { opacity: 0.18; }
+    100% { transform: translateY(-110vh) rotate(30deg); opacity: 0; }
+  }
+
+  /* card */
+  .card {
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(12px);
+    border-radius: 32px;
+    box-shadow: 0 8px 48px rgba(24,95,165,0.13), 0 2px 12px rgba(55,138,221,0.10);
+    padding: 48px 40px 40px;
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    border: 2px solid rgba(133,183,235,0.35);
+  }
+
+  /* screens */
+  .screen { display: none; animation: fadeIn 0.55s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* intro */
+  .big-emoji { font-size: 64px; display: block; margin-bottom: 10px; animation: bounce 1.6s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+  h1.title {
+    font-family: 'Pacifico', cursive;
+    font-size: 2rem;
+    color: var(--blue-dark);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .subtitle {
+    font-size: 1rem;
+    color: var(--blue-deep);
+    font-weight: 600;
+    margin-bottom: 28px;
+    opacity: 0.85;
+  }
+
+  /* button */
+  .btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--blue-main), var(--blue-deep));
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    padding: 14px 36px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(24,95,165,0.25);
+    transition: transform 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.3px;
+    margin-top: 8px;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(24,95,165,0.30); }
+  .btn:active { transform: scale(0.97); }
+
+  /* quiz */
+  .quiz-step { display: none; animation: fadeIn 0.4s ease; }
+  .quiz-step.active { display: block; }
+
+  .progress-bar-wrap {
+    background: var(--blue-light);
+    border-radius: 50px;
+    height: 8px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue-mid), var(--blue-main));
+    border-radius: 50px;
+    transition: width 0.5s ease;
+  }
+
+  .question-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--blue-main);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .question-text {
+    font-size: 1.22rem;
+    font-weight: 800;
+    color: var(--blue-dark);
+    margin-bottom: 24px;
+    line-height: 1.4;
+  }
+
+  .choices { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+  .choice-btn {
+    background: var(--soft);
+    border: 2px solid rgba(133,183,235,0.4);
+    border-radius: 16px;
+    padding: 14px 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.97rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s, transform 0.12s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .choice-btn:hover {
+    background: var(--blue-light);
+    border-color: var(--blue-main);
+    transform: translateX(4px);
+  }
+  .choice-btn.correct {
+    background: #d4f7e7;
+    border-color: #2ecc71;
+    color: #145a32;
+    animation: pop 0.3s ease;
+  }
+  .choice-btn.wrong {
+    background: #fde8e8;
+    border-color: #e74c3c;
+    color: #7b241c;
+  }
+  @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.04)} 100%{transform:scale(1)} }
+
+  .feedback-box {
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue-main);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    text-align: left;
+    display: none;
+  }
+  .next-btn-wrap { margin-top: 18px; text-align: center; display: none; }
+
+  /* final */
+  .score-circle {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-main), var(--blue-deep));
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-family: 'Pacifico', cursive;
+    font-size: 2rem;
+    color: #fff;
+    box-shadow: 0 6px 24px rgba(24,95,165,0.3);
+  }
+  .final-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.7rem;
+    color: var(--blue-dark);
+    margin-bottom: 10px;
+  }
+  .final-msg {
+    font-size: 1rem;
+    color: var(--blue-deep);
+    font-weight: 600;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .love-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .love-note {
+    background: var(--blue-light);
+    border-radius: 14px;
+    padding: 12px 16px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    text-align: left;
+    border-left: 3px solid var(--blue-main);
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  /* confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confettiFall 2.2s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 36px 22px 32px; border-radius: 24px; }
+    h1.title { font-size: 1.65rem; }
+    .question-text { font-size: 1.08rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- floating hearts background -->
+<div class="hearts-bg" id="heartsBg"></div>
+
+<div class="card">
+
+  <!-- INTRO SCREEN -->
+  <div class="screen active" id="screen-intro">
+    <span class="big-emoji">🎂</span>
+    <h1 class="title">Happy Birthday,<br>Angel! 💙</h1>
+    <p class="subtitle">I made something special just for you ✨<br>A little quiz about us — ready? 🥰</p>
+    <button class="btn" onclick="startQuiz()">Let's Go! 💌</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div class="screen" id="screen-quiz">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="quiz-step active" id="q1">
+      <p class="question-label">Question 1 of 6</p>
+      <p class="question-text">How did I feel the very first time I saw you? 👀</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="answer(this, false, 1)">😴 I was bored</button>
+        <button class="choice-btn" onclick="answer(this, true,  1)">💙 I couldn't stop staring</button>
+        <button class="choice-btn" onclick="answer(this, false, 1)">😐 I didn't notice you</button>
+        <button class="choice-btn" onclick="answer(this, false, 1)">😤 I was annoyed</button>
+      </div>
+      <div class="feedback-box" id="fb1"></div>
+      <div class="next-btn-wrap" id="next1"><button class="btn" onclick="nextQ(2)">Next 💙</button></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-step" id="q2">
+      <p class="question-label">Question 2 of 6</p>
+      <p class="question-text">What do I think is your most beautiful feature? 🌸</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="answer(this, false, 2)">💅 Your nails</button>
+        <button class="choice-btn" onclick="answer(this, false, 2)">🎀 Your hair</button>
+        <button class="choice-btn" onclick="answer(this, true,  2)">✨ Everything about you</button>
+        <button class="choice-btn" onclick="answer(this, false, 2)">👟 Your shoes</button>
+      </div>
+      <div class="feedback-box" id="fb2"></div>
+      <div class="next-btn-wrap" id="next2"><button class="btn" onclick="nextQ(3)">Next 💙</button></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-step" id="q3">
+      <p class="question-label">Question 3 of 6</p>
+      <p class="question-text">What's my favorite thing we do together? 🥹</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="answer(this, false, 3)">🎮 Playing games alone</button>
+        <button class="choice-btn" onclick="answer(this, true,  3)">💑 Literally anything, as long as it's with you</button>
+        <button class="choice-btn" onclick="answer(this, false, 3)">😴 Sleeping (not with you lol)</button>
+        <button class="choice-btn" onclick="answer(this, false, 3)">🍕 Eating without sharing</button>
+      </div>
+      <div class="feedback-box" id="fb3"></div>
+      <div class="next-btn-wrap" id="next3"><button class="btn" onclick="nextQ(4)">Next 💙</button></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-step" id="q4">
+      <p class="question-label">Question 4 of 6</p>
+      <p class="question-text">How much do I think about you in a day? 🤔</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="answer(this, false, 4)">😶 Never, I'm busy</button>
+        <button class="choice-btn" onclick="answer(this, false, 4)">🙂 Once or twice maybe</button>
+        <button class="choice-btn" onclick="answer(this, false, 4)">😊 A few times</button>
+        <button class="choice-btn" onclick="answer(this, true,  4)">💙 Every single second honestly</button>
+      </div>
+      <div class="feedback-box" id="fb4"></div>
+      <div class="next-btn-wrap" id="next4"><button class="btn" onclick="nextQ(5)">Next 💙</button></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-step" id="q5">
+      <p class="question-label">Question 5 of 6</p>
+      <p class="question-text">What would I do if you were sad? 🥺</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="answer(this, false, 5)">📺 Watch TV and ignore it</button>
+        <button class="choice-btn" onclick="answer(this, false, 5)">🤷 Say "you'll be fine"</button>
+        <button class="choice-btn" onclick="answer(this, true,  5)">🤗 Hold you tight and never let go</button>
+        <button class="choice-btn" onclick="answer(this, false, 5)">💤 Fall asleep</button>
+      </div>
+      <div class="feedback-box" id="fb5"></div>
+      <div class="next-btn-wrap" id="next5"><button class="btn" onclick="nextQ(6)">Next 💙</button></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="quiz-step" id="q6">
+      <p class="question-label">Question 6 of 6</p>
+      <p class="question-text">How long do I want to be with you? 💙</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="answer(this, false, 6)">📅 For a while I guess</button>
+        <button class="choice-btn" onclick="answer(this, false, 6)">🤞 Until something better comes</button>
+        <button class="choice-btn" onclick="answer(this, false, 6)">🗓️ A few more years</button>
+        <button class="choice-btn" onclick="answer(this, true,  6)">♾️ Forever and even longer than that</button>
+      </div>
+      <div class="feedback-box" id="fb6"></div>
+      <div class="next-btn-wrap" id="next6"><button class="btn" onclick="showFinal()">See your surprise! 🎉</button></div>
+    </div>
+  </div>
+
+  <!-- FINAL SCREEN -->
+  <div class="screen" id="screen-final">
+    <div class="score-circle" id="scoreCircle">💙</div>
+    <h1 class="final-title">You passed! 🎉</h1>
+    <p class="final-msg" id="finalMsg"></p>
+    <div class="love-notes" id="loveNotes"></div>
+    <button class="btn" onclick="restart()">Play Again 🔄</button>
+  </div>
+
+</div>
+
+<script>
+const feedbacks = {
+  1: "Because honestly? You're the kind of person you just can't look away from. 💙",
+  2: "I couldn't just pick one thing because every part of you is beautiful to me. 🌸",
+  3: "Any moment with you is my favorite moment. That's just facts. 🥰",
+  4: "You're literally always on my mind. Sorry not sorry. 💭💙",
+  5: "Seeing you sad is the worst feeling ever. I'd do anything to make you smile again. 🤗",
+  6: "Forever isn't even long enough. I mean it. ♾️💙"
+};
+
+const loveMessages = [
+  "💙 You make every ordinary day feel like a special occasion.",
+  "🌸 I'm so lucky to have someone as wonderful as you in my life.",
+  "✨ Watching you grow, laugh, and shine is my favorite thing in the world.",
+  "🎂 May this birthday be as sweet and amazing as you are to me.",
+  "🥹 I love you more than words can ever say — happy birthday, angel."
+];
+
+let score = 0;
+let currentQ = 1;
+const totalQ = 6;
+
+function startQuiz() {
+  score = 0; currentQ = 1;
+  show('screen-quiz');
+  updateProgress(1);
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function updateProgress(q) {
+  document.getElementById('progressBar').style.width = ((q-1)/totalQ*100) + '%';
+}
+
+function answer(btn, isCorrect, qNum) {
+  const step = document.getElementById('q' + qNum);
+  step.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    b.style.opacity = '0.7';
+  });
+  btn.style.opacity = '1';
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (isCorrect) score++;
+
+  const fb = document.getElementById('fb' + qNum);
+  fb.style.display = 'block';
+  fb.innerHTML = (isCorrect ? '✅ ' : '💙 ') + feedbacks[qNum];
+
+  document.getElementById('next' + qNum).style.display = 'block';
+}
+
+function nextQ(qNum) {
+  document.getElementById('q' + (qNum-1)).classList.remove('active');
+  document.getElementById('q' + qNum).classList.add('active');
+  updateProgress(qNum);
+}
+
+function showFinal() {
+  show('screen-final');
+  launchConfetti();
+
+  const sc = document.getElementById('scoreCircle');
+  sc.textContent = score + '/' + totalQ;
+
+  const msg = document.getElementById('finalMsg');
+  if (score === totalQ) {
+    msg.textContent = "Perfect score! Just like you — absolutely perfect in every way. Happy Birthday, my angel. 🎂💙";
+  } else if (score >= 4) {
+    msg.textContent = "So close to perfect — just like you, honestly. Have the most beautiful birthday, angel! 💙";
+  } else {
+    msg.textContent = "No matter the score, you're still the most perfect person to me. Happy Birthday! 🎂💙";
+  }
+
+  const notesDiv = document.getElementById('loveNotes');
+  notesDiv.innerHTML = '';
+  loveMessages.forEach((msg, i) => {
+    const d = document.createElement('div');
+    d.className = 'love-note';
+    d.style.animationDelay = (i * 0.18) + 's';
+    d.textContent = msg;
+    notesDiv.appendChild(d);
+  });
+}
+
+function restart() {
+  document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('q1').classList.add('active');
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = false;
+    b.style.opacity = '';
+    b.classList.remove('correct', 'wrong');
+  });
+  document.querySelectorAll('.feedback-box').forEach(f => f.style.display = 'none');
+  document.querySelectorAll('.next-btn-wrap').forEach(n => n.style.display = 'none');
+  score = 0; currentQ = 1;
+  show('screen-intro');
+}
+
+function launchConfetti() {
+  const colors = ['#378add','#85b7eb','#b5d4f4','#185fa5','#ffffff','#e6f1fb','#5bc8f5'];
+  for (let i = 0; i < 90; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.top = '-10px';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.width = (8 + Math.random()*8) + 'px';
+      c.style.height = (8 + Math.random()*8) + 'px';
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      c.style.animationDuration = (1.5 + Math.random()*1.5) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 3500);
+    }, i * 28);
+  }
+}
+
+// floating hearts background
+(function() {
+  const wrap = document.getElementById('heartsBg');
+  const emojis = ['💙','🩵','💎','⭐','✨','🌸','💫'];
+  for (let i = 0; i < 18; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart-float';
+    h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    h.style.left = (Math.random()*100) + '%';
+    h.style.animationDuration = (9 + Math.random()*10) + 's';
+    h.style.animationDelay = (Math.random()*10) + 's';
+    h.style.fontSize = (16 + Math.random()*18) + 'px';
+    wrap.appendChild(h);
+  }
+})();
+</script>
+</body>
+</html>
